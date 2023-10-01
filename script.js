@@ -7,16 +7,21 @@ let shouldClearDisplay = false;
 const display = document.querySelector('.display-text');
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
-const clearButton = document.querySelector('.clear-btn');
+const clearButton = document.querySelector('.clear');
 const decimalButton = document.querySelector('.decimal');
 const equalsButton = document.querySelector('.equals');
+const deleteButton = document.querySelector('.delete');
 
 const DEFAULT_HIGHLIGHT_COLOR = "rgb(182, 182, 182)";
 const DEFAULT_BUTTON_COLOR = clearButton.style.backgroundColor;
 const DEFAULT_DISPLAY_VALUE = "0";
+const OVERFLOW_DISPLAY_VALUE = 999999999999;
+const UNDERFLOW_DISPLAY_VALUE = 0.00000000001;
+const ROUNDS_PLACE = 10000000000;
 
 clearButton.addEventListener('click', clearDisplay);
 equalsButton.addEventListener('click', evaluate);
+deleteButton.addEventListener('click', deleteDisplay);
 
 //Appends decimal to display if possible
 decimalButton.addEventListener('click', () => {
@@ -27,6 +32,7 @@ decimalButton.addEventListener('click', () => {
 //Appends numbers to display
 numberButtons.forEach( button => {
     button.addEventListener('click', () => {
+        
         appendDisplay(button.textContent);
     });
 });
@@ -37,10 +43,7 @@ operatorButtons.forEach(button => {
         highlightOperator(button);
 
         let tempNum = Number(display.textContent);
-        if(isNaN(tempNum)) {
-            alert("ERROR: Current value is not a number");
-            return;
-        }
+        
         storedNum = tempNum;
         currOperatorButton = button;
         operator = button.textContent;
@@ -50,6 +53,7 @@ operatorButtons.forEach(button => {
 })
 
 function appendDisplay(content) {
+    if (display.textContent == 'NaN') return;
     if (shouldClearDisplay) {
         shouldClearDisplay = false;
         display.textContent = '';
@@ -65,6 +69,15 @@ function clearDisplay() {
     if(currOperatorButton) unhighlightOperator(currOperatorButton);
     resetValues();
     display.textContent = DEFAULT_DISPLAY_VALUE;
+}
+
+function deleteDisplay() {
+
+    if (display.textContent == DEFAULT_DISPLAY_VALUE ||
+        display.textContent == 'NaN') return;
+    
+    if (display.textContent.length == 1) display.textContent = DEFAULT_DISPLAY_VALUE;
+    display.textContent = display.textContent.substring(0, (display.textContent.length)-1);
 }
 
 function resetValues() {
@@ -88,8 +101,14 @@ function evaluate() {
 
     console.log(`${storedNum} ${operator} ${currNum} = ${res}`)
     
-    resetValues();
-    display.textContent = res;
+    resetValues(); 
+
+    display.textContent = Math.round(ROUNDS_PLACE*res)/ROUNDS_PLACE;
+
+    if (res > OVERFLOW_DISPLAY_VALUE) {
+        display.textContent = NaN;
+    }
+    
 }
 
 function printHiddenValues() {
