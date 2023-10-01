@@ -37,18 +37,21 @@ body {
     border-radius: 2px;
     margin-bottom: 1em;
 
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     justify-content:right;
     align-items: center;
     gap:20px;
+
+    word-wrap: break-word;
+    word-break: break-all;
     
 }
 
 .display-text {
-    font-size: 64px;
+    font-size: 48px;
     color: #3C412C;
-
+    
 }
 
 .row {
@@ -73,7 +76,7 @@ button {
 }
 */
 
-.calc-btn, .clear-btn {
+.calc-btn, .clear {
     
     background-color: rgb(207, 207, 207);
     height: 4em;
@@ -83,4 +86,13 @@ button {
 
 .calc-btn {
     width: 4em;
+}
+
+.calc-btn.clear, .calc-btn.delete {
+    width:inherit;
+    flex:1;
+}
+
+.toprow {
+    display:flex;
 }
