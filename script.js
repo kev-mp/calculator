@@ -17,7 +17,7 @@ const DEFAULT_BUTTON_COLOR = clearButton.style.backgroundColor;
 const DEFAULT_DISPLAY_VALUE = "0";
 const OVERFLOW_DISPLAY_VALUE = 999999999999;
 const UNDERFLOW_DISPLAY_VALUE = 0.00000000001;
-const ROUNDS_PLACE = 10000000000;
+const ROUNDS_PLACE = 10000000;
 
 clearButton.addEventListener('click', clearDisplay);
 equalsButton.addEventListener('click', evaluate);
@@ -32,7 +32,8 @@ decimalButton.addEventListener('click', () => {
 //Appends numbers to display
 numberButtons.forEach( button => {
     button.addEventListener('click', () => {
-        
+        if (display.textContent.length >= 12 
+            && shouldClearDisplay == false) return;
         appendDisplay(button.textContent);
     });
 });
